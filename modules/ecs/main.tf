@@ -17,8 +17,8 @@ resource "aws_ecs_task_definition" "this" {
   task_role_arn            = var.task_role_arn
 
   container_definitions = jsonencode([{
-    name  = "${var.project_name}-Container"
-    image = var.container_image
+    name      = "${var.project_name}-Container"
+    image     = var.container_image
     essential = true
     portMappings = [{
       containerPort = var.container_port
@@ -44,8 +44,8 @@ resource "aws_ecs_service" "this" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = var.subnet_ids
-    security_groups = [var.security_group_id]
+    subnets          = var.subnet_ids
+    security_groups  = [var.security_group_id]
     assign_public_ip = true
   }
 }

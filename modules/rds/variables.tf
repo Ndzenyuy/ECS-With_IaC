@@ -1,36 +1,40 @@
-# variables.tf
 variable "project_name" {
-  default = "catpipeline"
-}
-
-variable "container_image" {
-  description = "ECR image URI"
+  description = "Project name used in naming resources"
   type        = string
 }
 
-variable "container_cpu" {
-  default = 256
+variable "db_name" {
+  description = "Name of the MySQL database to create"
+  type        = string
 }
 
-variable "container_memory" {
-  default = 512
+variable "username" {
+  description = "Username for MySQL master user"
+  type        = string
 }
 
-variable "container_port" {
-  default = 80
-}
-
-variable "region" {
-  default = "us-east-1"
-}
-
-variable "db_password" {
-  description = "MySQL password"
+variable "password" {
+  description = "Password for MySQL master user"
   type        = string
   sensitive   = true
 }
 
 variable "db_az" {
-  description = "Availability zone for RDS"
+  description = "Availability Zone for the RDS instance"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC ID where RDS will be deployed"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for RDS subnet group"
+  type        = list(string)
+}
+
+variable "ecs_security_group_id" {
+  description = "Security group ID for ECS tasks allowed to access RDS"
   type        = string
 }
