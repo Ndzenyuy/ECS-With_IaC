@@ -1,11 +1,10 @@
 # main.tf (top of the file)
 terraform {
   backend "s3" {
-    bucket         = "your-tf-state-bucket"
+    bucket         = "cf-templates-ub6fcrxn86ye-us-east-1"
     key            = "ecs/deployment/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    
+    region         = "us-east-1"    
+    use_lockfile = true    
   }
 }
 

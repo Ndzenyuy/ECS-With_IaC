@@ -1,6 +1,6 @@
 # variables.tf
 variable "project_name" {
-  default = "catpipeline"
+  default = "ECS-with-IaC"
 }
 
 variable "container_image" {
