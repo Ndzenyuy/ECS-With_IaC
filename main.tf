@@ -34,5 +34,15 @@ module "ecs" {
   region             = var.region
 }
 
+module "db" {
+  source         = "./modules/rds"
+  project_name   = var.project_name
+  db_password    = var.db_password
+  db_az          = var.db_az
+  vpc_id         = module.network.vpc_id
+  subnet_ids = [module.network.private_subnet_ids[0]] 
+  security_group_id = module.network.rds_security_group_id
+}
+
 
 
