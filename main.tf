@@ -41,7 +41,7 @@ module "db" {
   db_name                = "books"
   username               = "root"
   password               = var.db_password
-  db_az                  = var.db_az
+  db_az                  = module.network.private_subnet_az
   vpc_id                 = module.network.vpc_id
   private_subnet_ids     = module.network.private_subnet_ids
   ecs_security_group_id  = module.network.ecs_security_group_id

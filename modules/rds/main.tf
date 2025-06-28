@@ -32,8 +32,8 @@ module "db" {
   instance_class    = "db.t3a.large"
   allocated_storage = 20
 
-  db_name  = var.db_name
-  username = var.username
+  db_name                = var.db_name
+  username               = var.username
   password = var.password
   port     = 3306
 

@@ -9,6 +9,6 @@ output "ecs_cluster_name" {
 }
 
 output "db_host" {
-  value = module.rds.db_instance_address
+  value = module.db.db_instance_address
 }
 

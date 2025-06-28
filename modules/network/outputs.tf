@@ -14,3 +14,8 @@ output "private_subnet_ids" {
   value = [for s in aws_subnet.private : s.id]
 }
 
+output "private_subnet_az" {
+  value = aws_subnet.private[0].availability_zone
+}
+
+
