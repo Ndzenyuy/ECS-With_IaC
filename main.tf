@@ -30,7 +30,7 @@ module "ecs" {
   security_group_id = module.network.ecs_security_group_id
   execution_role_arn = module.iam.execution_role_arn
   task_role_arn      = module.iam.task_role_arn
-  log_group_name     = module.ecs_log_group.name
+  log_group_name = module.ecs.log_group.name
   region             = var.region
 }
 
