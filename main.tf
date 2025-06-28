@@ -34,7 +34,7 @@ module "ecs" {
   region             = var.region
 }
 
-module "rds" {
+module "db" {
   source = "./modules/rds"
 
   project_name           = var.project_name
