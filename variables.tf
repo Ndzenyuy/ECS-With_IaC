@@ -30,8 +30,4 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "db_az" {
-  description = "Availability zone for RDS"
-  type        = string
-}
 
