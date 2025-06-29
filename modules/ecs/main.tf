@@ -77,21 +77,22 @@ resource "aws_ecs_cluster" "ecs-cluster" {
 
 ### cloudwatch log groups
 resource "aws_cloudwatch_log_group" "api" {
-  name              = "/ecs/${var.project_name}/api"
+  name              = "/ecs/api"
   retention_in_days = 30
 }
 resource "aws_cloudwatch_log_group" "webapi" {
-  name              = "/ecs/${var.project_name}/webapi"
+  name              = "/ecs/webapi"
   retention_in_days = 30
 }
 resource "aws_cloudwatch_log_group" "client" {
-  name              = "/ecs/${var.project_name}/client"
+  name              = "/ecs/client"
   retention_in_days = 30
 }
 resource "aws_cloudwatch_log_group" "nginx" {
-  name              = "/ecs/${var.project_name}/nginx"
+  name              = "/ecs/nginx"
   retention_in_days = 30
 }
+
 
 
 #####Task definitions

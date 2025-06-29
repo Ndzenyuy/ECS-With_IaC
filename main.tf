@@ -38,6 +38,7 @@ module "ecs" {
   api_container_port = var.api_container_port
   webapi_container_port = var.webapi_container_port
   client_container_port    = var.client_container_port  
+  log_group_name = aws_cloudwatch_log_group.api.name
 }
 
 module "db" {
@@ -52,6 +53,4 @@ module "db" {
   private_subnet_ids     = module.network.private_subnet_ids
   ecs_security_group_id  = module.network.ecs_security_group_id
 }
-
-
 
