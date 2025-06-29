@@ -30,8 +30,8 @@ module "db" {
 
   identifier        = "books"
   engine            = "mysql"
-  engine_version    = "8.4"
-  instance_class    = "db.t3a.large"
+  engine_version    = "8.0.41"
+  instance_class    = "db.t4g.micro"
   allocated_storage = 20
 
   db_name                = var.db_name
