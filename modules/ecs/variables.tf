@@ -8,7 +8,6 @@ variable "subnet_ids" {
 variable "security_group_id" {}
 variable "execution_role_arn" {}
 variable "task_role_arn" {}
-variable "log_group_name" {}
 variable "region" {}
 
 variable "api_image" {}

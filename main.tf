@@ -28,7 +28,6 @@ module "ecs" {
   security_group_id  = module.network.ecs_security_group_id
   execution_role_arn = module.iam.execution_role_arn
   task_role_arn      = module.iam.task_role_arn
-  log_group_name     = module.ecs.log_group.name
   region             = var.region
   webapi_image =  var.webapi_image
   nginx_image = var.nginx_image
@@ -38,7 +37,6 @@ module "ecs" {
   api_container_port = var.api_container_port
   webapi_container_port = var.webapi_container_port
   client_container_port    = var.client_container_port  
-  log_group_name = aws_cloudwatch_log_group.api.name
 }
 
 module "db" {
