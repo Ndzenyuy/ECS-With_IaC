@@ -42,7 +42,7 @@ module "db" {
   vpc_security_group_ids = [aws_security_group.rds.id]
 
   create_db_subnet_group = true
-  subnet_ids = [var.private_subnet_ids[0]]
+  subnet_ids = var.private_subnet_ids
 
 
   family                  = "mysql8.4"
