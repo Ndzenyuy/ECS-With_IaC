@@ -98,7 +98,7 @@ resource "aws_cloudwatch_log_group" "nginx" {
 #####Task definitions
 
 resource "aws_ecs_task_definition" "client" {
-  family                   = "${var.project_name}-Task:api"
+  family                   = "${var.project_name}-api-Task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.container_cpu
