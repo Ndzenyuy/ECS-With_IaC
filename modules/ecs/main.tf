@@ -114,7 +114,9 @@ resource "aws_ecs_task_definition" "client" {
       containerPort = var.client_container_port
       hostPort      = var.client_container_port
       protocol      = "tcp"
-    }]
+    }],
+    cpu    = var.container_cpu   
+    memory = var.container_memory 
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -144,7 +146,9 @@ resource "aws_ecs_task_definition" "api" {
       containerPort = var.api_container_port
       hostPort      = var.api_container_port
       protocol      = "tcp"
-    }]
+    }],
+    cpu    = var.container_cpu   
+    memory = var.container_memory 
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -174,7 +178,9 @@ resource "aws_ecs_task_definition" "webapi" {
       containerPort = var.webapi_container_port
       hostPort      = var.webapi_container_port
       protocol      = "tcp"
-    }]
+    }],
+    cpu    = var.container_cpu   
+    memory = var.container_memory 
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -204,7 +210,9 @@ resource "aws_ecs_task_definition" "nginx" {
       containerPort = var.nginx_container_port
       hostPort      = var.nginx_container_port
       protocol      = "tcp"
-    }]
+    }],
+    cpu    = var.container_cpu   
+    memory = var.container_memory  
     logConfiguration = {
       logDriver = "awslogs"
       options = {
