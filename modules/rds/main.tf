@@ -8,7 +8,8 @@ resource "aws_security_group" "rds" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [module.network.ecs_security_group_id]
+    security_groups = [var.ecs_security_group_id]
+    
   }
 
   egress {
