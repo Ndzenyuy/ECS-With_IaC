@@ -1,7 +1,8 @@
 resource "aws_security_group" "rds" {
   name        = "rds-access"
   description = "Allow MySQL access from ECS only"
-  vpc_id      = module.network.vpc_id
+  vpc_id      = var.vpc_id
+  
 
   ingress {
     from_port       = 3306
