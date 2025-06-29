@@ -45,7 +45,7 @@ module "db" {
   subnet_ids = var.private_subnet_ids
 
 
-  family                  = "mysql8.4"
+  family                  = "mysql8.0"
   major_engine_version    = "8.0"
   deletion_protection     = false
   backup_retention_period = 0
