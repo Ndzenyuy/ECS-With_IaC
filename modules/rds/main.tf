@@ -75,7 +75,7 @@ resource "null_resource" "init_db" {
 
   provisioner "local-exec" {
     command = <<EOT
-mysql -h ${module.db.db_instance_address} -P 3306 -u user -p${var.db_password} -e "CREATE TABLE IF NOT EXISTS books (id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255));" demodb
+mysql -h ${module.db.db_instance_address} -P 3306 -u user -p${var.password} -e "CREATE TABLE IF NOT EXISTS books (id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(255));" demodb
 EOT
   }
 }
