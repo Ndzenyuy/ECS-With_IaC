@@ -16,6 +16,9 @@ resource "aws_service_discovery_service" "api" {
     routing_policy = "MULTIVALUE"
   }
 
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
 
 resource "aws_service_discovery_service" "client" {
@@ -29,7 +32,9 @@ resource "aws_service_discovery_service" "client" {
     routing_policy = "MULTIVALUE"
   }
 
-  
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
 
 resource "aws_service_discovery_service" "nginx" {
@@ -44,7 +49,7 @@ resource "aws_service_discovery_service" "nginx" {
   }
 
   health_check_custom_config {
-     = 1
+    failure_threshold = 1
   }
 }
 
@@ -59,7 +64,9 @@ resource "aws_service_discovery_service" "webapi" {
     routing_policy = "MULTIVALUE"
   }
 
- 
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
 
 
