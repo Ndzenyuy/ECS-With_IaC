@@ -46,7 +46,7 @@ module "db" {
 
 
   family                  = "mysql8.4"
-  major_engine_version    = "8.4"
+  major_engine_version    = "8.0.41"
   deletion_protection     = false
   backup_retention_period = 0
   monitoring_interval     = 0
