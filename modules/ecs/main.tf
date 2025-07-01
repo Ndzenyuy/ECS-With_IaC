@@ -115,8 +115,8 @@ resource "aws_ecs_task_definition" "client" {
       hostPort      = var.client_container_port
       protocol      = "tcp"
     }],
-    cpu    = var.container_cpu   
-    memory = var.container_memory 
+    cpu    = var.container_cpu
+    memory = var.container_memory
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -147,8 +147,8 @@ resource "aws_ecs_task_definition" "api" {
       hostPort      = var.api_container_port
       protocol      = "tcp"
     }],
-    cpu    = var.container_cpu   
-    memory = var.container_memory 
+    cpu    = var.container_cpu
+    memory = var.container_memory
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -179,8 +179,8 @@ resource "aws_ecs_task_definition" "webapi" {
       hostPort      = var.webapi_container_port
       protocol      = "tcp"
     }],
-    cpu    = var.container_cpu   
-    memory = var.container_memory 
+    cpu    = var.container_cpu
+    memory = var.container_memory
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -194,19 +194,19 @@ resource "aws_ecs_task_definition" "webapi" {
 
 # Load balancer
 resource "aws_lb" "nginx-lb" {
-  name               = "${var.project_name}-nginx-alb"
+  name               = "${var.project_name}-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [module.network.alb_security_group_id]
-  subnets            = module.network.public_subnet_ids
+  security_groups    = [var.alb_security_group_id]
+  subnets            = var.public_subnet_ids
 }
 
 #Target group
 resource "aws_lb_target_group" "nginx-tg" {
-  name     = "${var.project_name}-nginx-tg"
-  port     = var.nginx_container_port
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name        = "${var.project_name}-tg"
+  port        = var.nginx_container_port
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
   target_type = "ip" # FARGATE requires "ip" target type
   health_check {
     path = "/"
@@ -245,8 +245,8 @@ resource "aws_ecs_task_definition" "nginx" {
       hostPort      = var.nginx_container_port
       protocol      = "tcp"
     }],
-    cpu    = var.container_cpu   
-    memory = var.container_memory  
+    cpu    = var.container_cpu
+    memory = var.container_memory
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -337,8 +337,8 @@ resource "aws_ecs_service" "nginx" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.nginx-tg.arn
-    container_name = "nginx"
-    container_port = var.nginx_container_port
+    container_name   = "nginx"
+    container_port   = var.nginx_container_port
   }
   depends_on = [aws_lb_listener.nginx-listener]
 }

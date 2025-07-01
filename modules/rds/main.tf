@@ -2,14 +2,14 @@ resource "aws_security_group" "rds" {
   name        = "rds-access"
   description = "Allow MySQL access from ECS only"
   vpc_id      = var.vpc_id
-  
+
 
   ingress {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
     security_groups = [var.ecs_security_group_id]
-    
+
   }
 
   egress {
@@ -34,15 +34,15 @@ module "db" {
   instance_class    = "db.t4g.micro"
   allocated_storage = 20
 
-  db_name                = var.db_name
-  username               = var.username
+  db_name  = var.db_name
+  username = var.username
   password = var.password
   port     = 3306
 
   vpc_security_group_ids = [aws_security_group.rds.id]
 
   create_db_subnet_group = true
-  subnet_ids = var.private_subnet_ids
+  subnet_ids             = var.private_subnet_ids
 
 
   family                  = "mysql8.0"

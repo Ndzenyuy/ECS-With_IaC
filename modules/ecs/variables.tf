@@ -19,3 +19,13 @@ variable "api_container_port" {}
 variable "webapi_container_port" {}
 variable "nginx_container_port" {}
 variable "client_container_port" {}
+
+variable "alb_security_group_id" {
+  description = "Security group ID for the Application Load Balancer"
+  type        = string
+}
+
+variable "public_subnet_ids" {
+  description = "List of public subnet IDs"
+  type        = list(string)
+}
