@@ -340,4 +340,5 @@ resource "aws_ecs_service" "nginx" {
     container_name = "nginx"
     container_port = var.nginx_container_port
   }
+  depends_on = [aws_lb_listener.nginx-listener]
 }
