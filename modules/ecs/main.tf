@@ -1,6 +1,6 @@
 
 resource "aws_service_discovery_private_dns_namespace" "ecs" {
-  name        = "ecs.local"
+  name        = "ecs-microservice-ns"
   vpc         = var.vpc_id
   description = "Private DNS namespace for ECS services"
 }
@@ -17,7 +17,7 @@ resource "aws_service_discovery_service" "api" {
   }
 
   health_check_custom_config {
-    
+
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_service_discovery_service" "client" {
   }
 
   health_check_custom_config {
-    
+
   }
 }
 
@@ -49,7 +49,7 @@ resource "aws_service_discovery_service" "nginx" {
   }
 
   health_check_custom_config {
-    
+
   }
 }
 
@@ -65,7 +65,7 @@ resource "aws_service_discovery_service" "webapi" {
   }
 
   health_check_custom_config {
-    
+
   }
 }
 
@@ -154,11 +154,11 @@ resource "aws_ecs_task_definition" "api" {
     image     = var.api_image
     essential = true
     secrets = [
-        {
-          name      = "MONGO_URI"
-          valueFrom = data.aws_ssm_parameter.mongo_uri.arn
-        }
-      ]
+      {
+        name      = "MONGO_URI"
+        valueFrom = data.aws_ssm_parameter.mongo_uri.arn
+      }
+    ]
 
     portMappings = [{
       containerPort = var.api_container_port
@@ -194,23 +194,23 @@ resource "aws_ecs_task_definition" "webapi" {
     essential = true
     environment = [
       {
-        name = "MYSQL_HOST"
+        name      = "MYSQL_HOST"
         valueFrom = var.db_instance_address
       },
       {
-        name = "MYSQL_USER"
+        name      = "MYSQL_USER"
         valueFrom = var.username
       },
       {
-        name = "MYSQL_DB"
+        name      = "MYSQL_DB"
         valueFrom = var.db_name
       }
     ]
     secrets = [
       {
-        name = "DB_PASS"
+        name      = "DB_PASS"
         valueFrom = data.aws_ssm_parameter.db_password.arn
-      }      
+      }
     ]
 
     portMappings = [{

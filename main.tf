@@ -39,9 +39,9 @@ module "ecs" {
   api_container_port    = var.api_container_port
   webapi_container_port = var.webapi_container_port
   client_container_port = var.client_container_port
-  db_instance_address = module.db.db_instance_address
-  username = var.username
-  db_name = var.db_name
+  db_instance_address   = module.db.db_instance_address
+  username              = var.username
+  db_name               = var.db_name
 }
 
 module "db" {
