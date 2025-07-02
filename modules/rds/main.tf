@@ -24,6 +24,12 @@ resource "aws_security_group" "rds" {
   }
 }
 
+#####   data sources for environment variables
+
+data "aws_ssm_parameter" "db_password" {
+  name = "DB_PASS"
+}
+
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
   version = "5.0.2"
@@ -36,7 +42,7 @@ module "db" {
 
   db_name  = var.db_name
   username = var.username
-  password = var.password
+  password = data.aws_ssm_parameter.db_password.value
   port     = 3306
 
   vpc_security_group_ids = [aws_security_group.rds.id]

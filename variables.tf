@@ -28,15 +28,12 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "db_password" {
-  description = "MySQL password"
-  type        = string
-  sensitive   = true
-}
-
 variable "api_image" {}
 variable "webapi_image" {}
 variable "nginx_image" {}
 variable "client_image" {}
+variable "db_name" {}
+variable "username" {}
+
 
 

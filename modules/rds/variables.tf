@@ -13,12 +13,6 @@ variable "username" {
   type        = string
 }
 
-variable "password" {
-  description = "Password for MySQL master user"
-  type        = string
-  sensitive   = true
-}
-
 variable "db_az" {
   description = "Availability Zone for the RDS instance"
   type        = string

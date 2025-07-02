@@ -39,15 +39,17 @@ module "ecs" {
   api_container_port    = var.api_container_port
   webapi_container_port = var.webapi_container_port
   client_container_port = var.client_container_port
+  db_instance_address = module.db.db_instance_address
+  username = var.username
+  db_name = var.db_name
 }
 
 module "db" {
   source = "./modules/rds"
 
   project_name          = var.project_name
-  db_name               = "books"
-  username              = "root"
-  password              = var.db_password
+  db_name               = var.db_name
+  username              = var.username
   db_az                 = module.network.private_subnet_az
   vpc_id                = module.network.vpc_id
   private_subnet_ids    = module.network.private_subnet_ids

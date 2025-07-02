@@ -17,7 +17,7 @@ resource "aws_service_discovery_service" "api" {
   }
 
   health_check_custom_config {
-    failure_threshold = 1
+    
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_service_discovery_service" "client" {
   }
 
   health_check_custom_config {
-    failure_threshold = 1
+    
   }
 }
 
@@ -49,7 +49,7 @@ resource "aws_service_discovery_service" "nginx" {
   }
 
   health_check_custom_config {
-    failure_threshold = 1
+    
   }
 }
 
@@ -65,7 +65,7 @@ resource "aws_service_discovery_service" "webapi" {
   }
 
   health_check_custom_config {
-    failure_threshold = 1
+    
   }
 }
 
@@ -91,6 +91,15 @@ resource "aws_cloudwatch_log_group" "client" {
 resource "aws_cloudwatch_log_group" "nginx" {
   name              = "/ecs/nginx"
   retention_in_days = 30
+}
+
+#####   data sources for environment variables
+
+data "aws_ssm_parameter" "mongo_uri" {
+  name = "MONGO_URI"
+}
+data "aws_ssm_parameter" "db_password" {
+  name = "DB_PASS"
 }
 
 
@@ -128,6 +137,8 @@ resource "aws_ecs_task_definition" "client" {
   }])
 }
 
+
+
 #api
 resource "aws_ecs_task_definition" "api" {
   family                   = "${var.project_name}-api-Task"
@@ -142,6 +153,13 @@ resource "aws_ecs_task_definition" "api" {
     name      = "api"
     image     = var.api_image
     essential = true
+    secrets = [
+        {
+          name      = "MONGO_URI"
+          valueFrom = data.aws_ssm_parameter.mongo_uri.arn
+        }
+      ]
+
     portMappings = [{
       containerPort = var.api_container_port
       hostPort      = var.api_container_port
@@ -174,6 +192,27 @@ resource "aws_ecs_task_definition" "webapi" {
     name      = "webapi"
     image     = var.webapi_image
     essential = true
+    environment = [
+      {
+        name = "MYSQL_HOST"
+        valueFrom = var.db_instance_address
+      },
+      {
+        name = "MYSQL_USER"
+        valueFrom = var.username
+      },
+      {
+        name = "MYSQL_DB"
+        valueFrom = var.db_name
+      }
+    ]
+    secrets = [
+      {
+        name = "DB_PASS"
+        valueFrom = data.aws_ssm_parameter.db_password.arn
+      }      
+    ]
+
     portMappings = [{
       containerPort = var.webapi_container_port
       hostPort      = var.webapi_container_port
@@ -274,7 +313,7 @@ resource "aws_ecs_service" "client" {
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   service_registries {
@@ -292,7 +331,7 @@ resource "aws_ecs_service" "api" {
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   service_registries {
@@ -310,7 +349,7 @@ resource "aws_ecs_service" "webapi" {
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   service_registries {
@@ -328,7 +367,7 @@ resource "aws_ecs_service" "nginx" {
   network_configuration {
     subnets          = var.subnet_ids
     security_groups  = [var.security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   service_registries {

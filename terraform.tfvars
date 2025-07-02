@@ -5,7 +5,8 @@ nginx_image  = "997450571655.dkr.ecr.us-east-1.amazonaws.com/nodeapi:latest"
 client_image = "997450571655.dkr.ecr.us-east-1.amazonaws.com/client:latest"
 project_name = "ecs-microservices-deployment"
 region       = "us-east-1"
-db_password  = "pass1234"
+db_name = "books"
+username = "emart"
 
 
 
