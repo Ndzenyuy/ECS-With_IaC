@@ -210,6 +210,10 @@ resource "aws_ecs_task_definition" "webapi" {
       {
         name      = "DB_PASS"
         valueFrom = data.aws_ssm_parameter.db_password.arn
+      },
+      {
+        name      = "MONGO_URI"
+        valueFrom = data.aws_ssm_parameter.mongo_uri.arn
       }
     ]
 
