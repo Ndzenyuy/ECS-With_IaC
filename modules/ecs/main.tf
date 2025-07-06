@@ -195,21 +195,25 @@ resource "aws_ecs_task_definition" "webapi" {
     environment = [
       {
         name      = "MYSQL_HOST"
-        valueFrom = var.db_instance_address
+        value = var.db_instance_address
       },
       {
         name      = "MYSQL_USER"
-        valueFrom = var.username
+        value = var.username
       },
       {
         name      = "MYSQL_DB"
-        valueFrom = var.db_name
+        value = var.db_name
       }
     ]
     secrets = [
       {
         name      = "DB_PASS"
         valueFrom = data.aws_ssm_parameter.db_password.arn
+      },
+      {
+        name      = "MONGO_URI"
+        valueFrom = data.aws_ssm_parameter.mongo_uri.arn
       }
     ]
 
@@ -281,7 +285,7 @@ resource "aws_ecs_task_definition" "nginx" {
     essential = true
     portMappings = [{
       containerPort = var.nginx_container_port
-      hostPort      = var.nginx_container_port
+      hostPort      = 0
       protocol      = "tcp"
     }],
     cpu    = var.container_cpu

@@ -63,6 +63,34 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+resource "aws_security_group_rule" "allow_alb_to_ecs_80" {
+  type                     = "ingress"
+  from_port                = 4200
+  to_port                  = 4200
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_sg.id
+  source_security_group_id = aws_security_group.alb-sg.id
+}
+
+resource "aws_security_group_rule" "allow_alb_to_ecs_5000" {
+  type                     = "ingress"
+  from_port                = 5000
+  to_port                  = 5000
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_sg.id
+  source_security_group_id = aws_security_group.alb-sg.id
+}
+
+resource "aws_security_group_rule" "allow_alb_to_ecs_9000" {
+  type                     = "ingress"
+  from_port                = 9000
+  to_port                  = 9000
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_sg.id
+  source_security_group_id = aws_security_group.alb-sg.id
+}
+
+
 #alb security group
 
 resource "aws_security_group" "alb-sg" {
