@@ -63,32 +63,33 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_security_group_rule" "allow_alb_to_ecs_80" {
+resource "aws_security_group_rule" "allow_ecs_internal" {
   type                     = "ingress"
   from_port                = 4200
   to_port                  = 4200
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ecs_sg.id
-  source_security_group_id = aws_security_group.alb-sg.id
+  source_security_group_id = aws_security_group.ecs_sg.id
 }
 
-resource "aws_security_group_rule" "allow_alb_to_ecs_5000" {
+resource "aws_security_group_rule" "allow_ecs_internal_5000" {
   type                     = "ingress"
   from_port                = 5000
   to_port                  = 5000
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ecs_sg.id
-  source_security_group_id = aws_security_group.alb-sg.id
+  source_security_group_id = aws_security_group.ecs_sg.id
 }
 
-resource "aws_security_group_rule" "allow_alb_to_ecs_9000" {
+resource "aws_security_group_rule" "allow_ecs_internal_9000" {
   type                     = "ingress"
   from_port                = 9000
   to_port                  = 9000
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ecs_sg.id
-  source_security_group_id = aws_security_group.alb-sg.id
+  source_security_group_id = aws_security_group.ecs_sg.id
 }
+
 
 
 #alb security group
@@ -123,10 +124,10 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port       = var.container_port
-    security_groups = [aws_security_group.alb-sg.id]
-    to_port         = var.container_port
+    from_port       = 80 
+    to_port         = 80
     protocol        = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

@@ -14,6 +14,4 @@ output "log_group_client" {
 output "log_group_nginx" {
   value = aws_cloudwatch_log_group.nginx
 }
-output "nginx_target_group_arn" {
-  value = aws_lb_target_group.nginx-tg.arn
-}
+

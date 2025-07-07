@@ -123,6 +123,7 @@ resource "aws_ecs_task_definition" "client" {
       containerPort = var.client_container_port
       hostPort      = var.client_container_port
       protocol      = "tcp"
+      appProtocol   = "http"
     }],
     cpu    = var.container_cpu
     memory = var.container_memory
@@ -235,38 +236,7 @@ resource "aws_ecs_task_definition" "webapi" {
   }])
 }
 
-# Load balancer
-resource "aws_lb" "nginx-lb" {
-  name               = "${var.project_name}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [var.alb_security_group_id]
-  subnets            = var.public_subnet_ids
-}
 
-#Target group
-resource "aws_lb_target_group" "nginx-tg" {
-  name        = "${var.project_name}-tg"
-  port        = var.nginx_container_port
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
-  target_type = "ip" # FARGATE requires "ip" target type
-  health_check {
-    path = "/"
-  }
-}
-
-# Listener
-resource "aws_lb_listener" "nginx-listener" {
-  load_balancer_arn = aws_lb.nginx-lb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.nginx-tg.arn
-  }
-}
 
 
 #nginx
@@ -285,7 +255,6 @@ resource "aws_ecs_task_definition" "nginx" {
     essential = true
     portMappings = [{
       containerPort = var.nginx_container_port
-      hostPort      = 0
       protocol      = "tcp"
     }],
     cpu    = var.container_cpu
@@ -378,10 +347,10 @@ resource "aws_ecs_service" "nginx" {
     registry_arn = aws_service_discovery_service.nginx.arn
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.nginx-tg.arn
-    container_name   = "nginx"
-    container_port   = var.nginx_container_port
-  }
-  depends_on = [aws_lb_listener.nginx-listener]
+  #load_balancer {
+  #  target_group_arn = aws_lb_target_group.nginx-tg.arn
+  #  container_name   = "nginx"
+  #  container_port   = var.nginx_container_port
+  # }
+  # depends_on = [aws_lb_listener.nginx-listener]
 }

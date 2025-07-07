@@ -4,11 +4,11 @@ variable "project_name" {
 }
 
 variable "container_cpu" {
-  default = 256
+  default = 1024
 }
 
 variable "container_memory" {
-  default = 512
+  default = 2048
 }
 
 variable "nginx_container_port" {
