@@ -102,6 +102,44 @@ data "aws_ssm_parameter" "db_password" {
   name = "DB_PASS"
 }
 
+resource "aws_lb_target_group" "nginx_tg" {
+  name        = "${var.project_name}-tg"
+  port        = var.nginx_container_port  # e.g., 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path                = "/"              # MUST match nginx `/` route
+    protocol            = "HTTP"
+    port                = "traffic-port"   # Use the task's exposed port
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200"
+  }
+}
+
+resource "aws_lb" "nginx_alb" {
+  name               = "${var.project_name}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [var.alb_security_group_id]
+  subnets            = var.public_subnet_ids
+}
+
+
+resource "aws_lb_listener" "nginx_listener" {
+  load_balancer_arn = aws_lb.nginx_alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.nginx_tg.arn
+  }
+}
 
 
 #####Task definitions
@@ -254,7 +292,8 @@ resource "aws_ecs_task_definition" "nginx" {
     image     = var.nginx_image
     essential = true
     portMappings = [{
-      containerPort = var.nginx_container_port
+      containerPort = var.nginx_container_port  # e.g., 80
+      hostPort      = var.nginx_container_port  # Must match when using awsvpc
       protocol      = "tcp"
     }],
     cpu    = var.container_cpu
@@ -268,6 +307,7 @@ resource "aws_ecs_task_definition" "nginx" {
       }
     }
   }])
+  
 }
 
 
@@ -342,6 +382,14 @@ resource "aws_ecs_service" "nginx" {
     security_groups  = [var.security_group_id]
     assign_public_ip = true
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.nginx_tg.arn
+    container_name   = "nginx"
+    container_port   = 80
+  }
+
+  depends_on = [aws_lb_listener.nginx_listener]
 
   service_registries {
     registry_arn = aws_service_discovery_service.nginx.arn

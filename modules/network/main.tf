@@ -63,50 +63,24 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_security_group_rule" "allow_ecs_internal" {
-  type                     = "ingress"
-  from_port                = 4200
-  to_port                  = 4200
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.ecs_sg.id
-  source_security_group_id = aws_security_group.ecs_sg.id
-}
-
-resource "aws_security_group_rule" "allow_ecs_internal_5000" {
-  type                     = "ingress"
-  from_port                = 5000
-  to_port                  = 5000
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.ecs_sg.id
-  source_security_group_id = aws_security_group.ecs_sg.id
-}
-
-resource "aws_security_group_rule" "allow_ecs_internal_9000" {
-  type                     = "ingress"
-  from_port                = 9000
-  to_port                  = 9000
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.ecs_sg.id
-  source_security_group_id = aws_security_group.ecs_sg.id
-}
-
-
-
+# Security Groups
 #alb security group
 
-resource "aws_security_group" "alb-sg" {
-  name        = "${var.project_name}-ALB-SG"
-  description = "Allow container traffic from the internet"
+resource "aws_security_group" "alb_sg" {
+  name        = "${var.project_name}-alb-sg"
+  description = "Allow HTTP traffic from the internet to ALB"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port   = var.container_port
-    to_port     = var.container_port
+    description = "Allow HTTP from anywhere"
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -114,23 +88,53 @@ resource "aws_security_group" "alb-sg" {
   }
 
   tags = {
-    Name = "${var.project_name}-ALB-SG"
+    Name = "${var.project_name}-alb-sg"
   }
 }
 
+resource "aws_security_group_rule" "allow_alb_to_ecs_nginx_80" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ecs_sg.id
+  source_security_group_id = aws_security_group.alb_sg.id
+  description              = "Allow ALB to reach ECS Nginx on port 80"
+}
+
 resource "aws_security_group" "ecs_sg" {
-  name        = "${var.project_name}-ECS-SG"
-  description = "Allow container traffic"
+  name        = "${var.project_name}-ecs-sg"
+  description = "Allow traffic from ALB and internal ECS services"
   vpc_id      = aws_vpc.main.id
 
+
+  # Internal ECS service-to-service traffic
   ingress {
-    from_port       = 80 
-    to_port         = 80
-    protocol        = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description = "Internal ECS traffic on port 4200"
+    from_port   = 4200
+    to_port     = 4200
+    protocol    = "tcp"
+    self        = true
+  }
+
+  ingress {
+    description = "Internal ECS traffic on port 5000"
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "tcp"
+    self        = true
+  }
+
+  ingress {
+    description = "Internal ECS traffic on port 9000"
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    self        = true
   }
 
   egress {
+    description = "Allow all outbound"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -138,7 +142,7 @@ resource "aws_security_group" "ecs_sg" {
   }
 
   tags = {
-    Name = "${var.project_name}-ECS-SG"
+    Name = "${var.project_name}-ecs-sg"
   }
 }
 

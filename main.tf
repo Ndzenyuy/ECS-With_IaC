@@ -26,9 +26,9 @@ module "ecs" {
   vpc_id                = module.network.vpc_id
   subnet_ids            = module.network.public_subnet_ids
   security_group_id     = module.network.ecs_security_group_id
+  alb_security_group_id = module.network.alb_security_group_id
   execution_role_arn    = module.iam.execution_role_arn
   task_role_arn         = module.iam.task_role_arn
-  alb_security_group_id = module.network.alb_security_group_id
   public_subnet_ids     = module.network.public_subnet_ids
   region                = var.region
   webapi_image          = var.webapi_image
